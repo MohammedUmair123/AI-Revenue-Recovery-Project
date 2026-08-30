@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ai-revenue-recovery-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        value: onboarding@resend.dev
+      - key: SEND_REAL_EMAILS
+        value: "true"
+      - key: DATABASE_URL
+        value: sqlite:///./revenue_recovery.db
+      - key: CORS_ORIGINS
+        value: "*"
