@@ -138,7 +138,7 @@ Dashboard & Audit Logs
 | Frontend | React + Vite + Tailwind CSS |
 | Backend | FastAPI |
 | Database | SQLite |
-| AI Model | Groq (Llama 3.3 70B) |
+| AI Model | Groq (OpenAI GPT-OSS-120B) |
 | Email | Resend |
 | Deployment | Vercel + Render |
 
