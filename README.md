@@ -2,7 +2,7 @@
 
 An AI-powered system that automatically detects revenue at risk, identifies the root cause using an LLM, decides the best recovery strategy, and executes recovery actions while enforcing compliance rules and maintaining a complete audit trail.
 
-![image alt]()
+![image alt](https://github.com/MohammedUmair123/AI-Revenue-Recovery-Project/blob/98c33dbccfeaae098a8f80c95545887b86e3514b/Robot_Image.png)
 
 ---
 
