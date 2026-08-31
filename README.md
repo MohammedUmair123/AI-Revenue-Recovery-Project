@@ -1,152 +1,257 @@
 # AI Revenue Recovery Agent
 
-## 🚀 Live Demo
-
-**Try the project here:**  
-👉 **https://airevenue-recovery-project1.vercel.app/**
-
-No setup required. Simply:
-
-1. Click **Seed Batch Data**
-2. Click **Run Recovery Batch**
-3. Watch the AI agent detect revenue at risk, diagnose the cause, decide the best intervention, and execute recovery actions.
+An AI-powered system that automatically detects revenue at risk, identifies the root cause using an LLM, decides the best recovery strategy, and executes recovery actions while enforcing compliance rules and maintaining a complete audit trail.
 
 ---
 
-## Overview
+# 🚀 Live Demo
 
-Businesses lose revenue every day because of:
+### Frontend
+**https://airevenue-recovery-project1.vercel.app/**
+
+### How to Test
+
+1. Open the live application.
+2. Click **Seed Batch Data** to generate synthetic customer events.
+3. Click **Run Recovery Batch**.
+4. Watch the AI:
+   - Detect at-risk revenue
+   - Diagnose the root cause
+   - Decide the best intervention
+   - Send recovery emails
+   - Update the dashboard
+   - Record every action in the audit trail
+
+No local setup is required to try the project.
+
+---
+
+# 📖 Overview
+
+Businesses lose revenue every day due to:
 
 - Failed payments
-- Abandoned carts
+- Abandoned shopping carts
 - Failed subscription renewals
 - Overdue invoices
 
-This project demonstrates an **AI-powered Revenue Recovery Agent** that automatically:
+This project automates the recovery process using AI.
+
+Instead of manually contacting customers, the system:
 
 - Detects revenue at risk
-- Diagnoses why the payment failed using an LLM
-- Chooses the best recovery strategy
-- Enforces compliance and stopping rules
+- Uses an LLM to diagnose why the payment failed
+- Chooses the most suitable recovery action
+- Applies compliance and stopping rules
 - Sends recovery emails
-- Records every action in an audit trail
-
-The dashboard visualizes recovery metrics, root causes, and the complete decision history.
+- Updates recovery metrics
+- Stores every decision in an audit log
 
 ---
 
-## Features
+# ✨ Features
 
-### 🤖 AI Diagnosis
-Uses **Groq (OpenAI GPT-OSS-120B)** to determine the most likely reason behind each revenue loss.
+## 🤖 AI Root Cause Diagnosis
 
-Examples:
+The application uses **OpenAI GPT-OSS-120B** through the **Groq API** to identify why a payment or transaction failed.
+
+Example root causes include:
 
 - Card expired
 - Insufficient funds
+- Invalid CVV
+- Payment gateway timeout
+- Price hesitation
 - Customer abandoned checkout
 - Invoice overlooked
-- Price hesitation
+- High shipping cost
+- Cash flow issues
+- Bank declined transaction
 
 ---
 
-### 🧠 Intelligent Decision Engine
+## 🧠 AI Decision Engine
 
-Based on the diagnosis, the agent decides whether to:
+Based on the diagnosis, the agent automatically decides the most appropriate recovery action.
+
+Possible actions include:
 
 - Retry payment
 - Send reminder email
 - Send SMS reminder
-- Offer discount
-- Offer grace period
-- Escalate to a human
-- Stop recovery
+- Offer a discount
+- Offer a grace period
+- Mark promise to pay
+- Escalate to a human agent
+- Stop further recovery attempts
 
 ---
 
-### ✅ Compliance & Safety
+## ✅ Compliance & Safety Rules
 
-Before taking any action, the system checks:
+Before performing any action, the system checks:
 
 - Do Not Contact customers
 - Customer opt-outs
 - Active payment disputes
 - Maximum contact attempts
 - Maximum recovery window
-- Quiet hours (disabled only in demo mode)
+- Quiet hours (disabled in demo mode)
+
+These rules ensure recovery actions remain compliant.
 
 ---
 
-### 📧 Real Email Integration
+## 📧 Real Email Integration
 
-Supports real email delivery using **Resend**.
+Recovery emails are sent using **Resend**.
 
-For demo purposes, recovery emails are delivered directly to the configured test inbox.
+The project supports:
+
+- Real email delivery
+- Personalized email templates
+- Test recipient redirection for demo purposes
 
 ---
 
-### 📊 Dashboard
+## 📊 Interactive Dashboard
 
-The React dashboard displays:
+The dashboard displays:
 
 - Total revenue at risk
-- Total recovered amount
+- Total recovered revenue
 - Recovery rate
 - Root cause analysis
-- Recovery audit trail
+- Recovery statistics
 - Event history
+- Complete audit trail
 
 ---
 
-## Architecture
+# 🏗️ System Architecture
 
 ```
+Revenue Events
+      │
+      ▼
 Detect At-Risk Events
-          │
-          ▼
-Diagnose Root Cause (LLM)
-          │
-          ▼
+      │
+      ▼
+AI Diagnosis
+(OpenAI GPT-OSS-120B via Groq)
+      │
+      ▼
 Decision Engine
-          │
-          ▼
+      │
+      ▼
 Compliance Checks
-          │
-          ▼
+      │
+      ▼
 Stopping Rules
-          │
-          ▼
+      │
+      ▼
 Execute Recovery
-          │
-     ┌────┴────┐
-     │         │
- Email      Payment Retry
-     │
-     ▼
+      │
+ ┌────┴───────────────┐
+ │                    │
+ ▼                    ▼
+Send Email       Retry Payment
+ │                    │
+ └────────────┬───────┘
+              ▼
 Update Database
-     │
-     ▼
+              │
+              ▼
 Dashboard & Audit Logs
 ```
 
 ---
 
-## Tech Stack
+# 🛠️ Tech Stack
 
 | Component | Technology |
-|-----------|------------|
+|------------|------------|
 | Frontend | React + Vite + Tailwind CSS |
-| Backend | FastAPI |
-| Database | SQLite |
-| AI Model | Groq (OpenAI GPT-OSS-120B) |
-| Email | Resend |
+| Backend | FastAPI (Python) |
+| Database | SQLite + SQLAlchemy |
+| AI Model | OpenAI GPT-OSS-120B (via Groq API) |
+| Email Service | Resend |
 | Deployment | Vercel + Render |
 
 ---
 
-## Run Locally
+# ☁️ Deployment
 
-### Backend
+## Frontend
+
+- Hosted on **Vercel**
+- Connected directly to GitHub
+- Automatically redeploys whenever new code is pushed
+
+**Live URL**
+
+https://airevenue-recovery-project1.vercel.app/
+
+---
+
+## Backend
+
+- Hosted on **Render**
+- FastAPI application
+- Connected directly to GitHub
+- Automatically redeploys after every GitHub push
+
+Configured environment variables:
+
+```
+GROQ_API_KEY
+GROQ_MODEL=openai/gpt-oss-120b
+RESEND_API_KEY
+SEND_REAL_EMAILS
+TEST_RECIPIENT_EMAIL
+```
+
+---
+
+## Frontend Configuration
+
+The frontend communicates with the deployed backend using:
+
+```
+VITE_API_BASE_URL=https://your-render-backend.onrender.com
+```
+
+---
+
+## Deployment Workflow
+
+```
+           GitHub Repository
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+        ▼                   ▼
+   Vercel Frontend     Render Backend
+        │                   │
+        │                   ▼
+        │            SQLite Database
+        │                   │
+        │                   ▼
+        │        OpenAI GPT-OSS-120B
+        │          (via Groq API)
+        │                   │
+        │                   ▼
+        │             Resend Email API
+        └───────────────┬───────────────┘
+                        ▼
+                 User Dashboard
+```
+
+---
+
+# 🚀 Running Locally
+
+## Backend
 
 ```bash
 cd backend
@@ -154,6 +259,8 @@ cd backend
 python -m venv .venv
 
 source .venv/bin/activate
+# Windows:
+# .venv\Scripts\activate
 
 pip install -r requirements.txt
 
@@ -168,9 +275,15 @@ Backend runs at:
 http://localhost:8000
 ```
 
+API Documentation:
+
+```
+http://localhost:8000/docs
+```
+
 ---
 
-### Frontend
+## Frontend
 
 ```bash
 cd frontend
@@ -190,18 +303,25 @@ http://localhost:5173
 
 ---
 
-## Environment Variables
+# 🔐 Environment Variables
 
-### Backend
+## Backend
 
 ```
-GROQ_API_KEY=your_key
-RESEND_API_KEY=your_key
+GROQ_API_KEY=your_api_key
+
+GROQ_MODEL=openai/gpt-oss-120b
+
+RESEND_API_KEY=your_api_key
+
 SEND_REAL_EMAILS=true
+
 TEST_RECIPIENT_EMAIL=your_email@example.com
 ```
 
-### Frontend
+---
+
+## Frontend
 
 ```
 VITE_API_BASE_URL=http://localhost:8000
@@ -209,41 +329,80 @@ VITE_API_BASE_URL=http://localhost:8000
 
 ---
 
-## Demo Workflow
+# 🔄 Demo Workflow
 
-1. Seed synthetic revenue events
-2. Detect at-risk revenue
-3. Diagnose root cause using AI
-4. Decide the best recovery strategy
-5. Execute recovery actions
-6. Send recovery emails
-7. Update dashboard metrics
-8. Record every decision in the audit log
+```
+Seed Batch Data
+        │
+        ▼
+Detect At-Risk Events
+        │
+        ▼
+AI Root Cause Diagnosis
+        │
+        ▼
+Decision Engine
+        │
+        ▼
+Compliance Validation
+        │
+        ▼
+Execute Recovery
+        │
+        ▼
+Send Recovery Email
+        │
+        ▼
+Update Database
+        │
+        ▼
+Refresh Dashboard
+        │
+        ▼
+Store Audit Logs
+```
 
 ---
 
-## Project Structure
+# 📂 Project Structure
 
 ```
 ai-revenue-recovery/
+
+├── backend/
+│   ├── agent/
+│   ├── api/
+│   ├── rules/
+│   ├── services/
+│   ├── models/
+│   └── main.py
 │
-├── backend/        FastAPI backend
-├── frontend/       React dashboard
-├── docs/           Architecture & demo guide
-└── README.md
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── api.ts
+│   └── App.tsx
+│
+├── docs/
+│   ├── ARCHITECTURE.md
+│   └── DEMO_SCRIPT.md
+│
+├── README.md
+└── docker-compose.yml
 ```
 
 ---
 
-## Current Implementation
+# ✅ Current Implementation
 
 | Feature | Status |
-|---------|--------|
+|----------|--------|
+| AI Revenue Detection | ✅ |
 | AI Root Cause Diagnosis | ✅ |
-| Decision Engine | ✅ |
+| Intelligent Decision Engine | ✅ |
 | Compliance Rules | ✅ |
 | Stopping Rules | ✅ |
-| Recovery Emails | ✅ |
+| Real Email Sending | ✅ |
 | Dashboard | ✅ |
 | Audit Trail | ✅ |
 | Synthetic Data Generator | ✅ |
@@ -251,11 +410,27 @@ ai-revenue-recovery/
 
 ---
 
-## Future Improvements
+# 🚀 Future Improvements
 
 - Twilio SMS integration
-- Stripe payment retries
-- PostgreSQL support
+- Stripe payment retry integration
+- PostgreSQL database
 - Multi-tenant architecture
-- Live webhook ingestion
-- Analytics dashboard
+- Real payment gateway webhooks
+- Advanced analytics dashboard
+- Authentication & role-based access
+
+---
+
+# 📸 Sample Workflow
+
+1. Seed synthetic customer data.
+2. Detect revenue at risk.
+3. AI diagnoses the root cause.
+4. Decision engine selects the best intervention.
+5. Compliance rules validate the action.
+6. Recovery email is sent.
+7. Dashboard updates recovery metrics.
+8. Every action is stored in the audit trail.
+
+This project demonstrates how AI can automate revenue recovery while maintaining compliance, transparency, and complete traceability.
