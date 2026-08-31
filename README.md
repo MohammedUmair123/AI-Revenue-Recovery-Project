@@ -1,123 +1,261 @@
 # AI Revenue Recovery Agent
 
-Detects revenue at risk (failed payments, abandoned checkouts, failed
-subscription renewals, overdue B2B invoices), diagnoses the root cause with
-an LLM, decides the right intervention, and executes a **bounded** recovery
-workflow — with compliance gates, stopping rules, and a full audit trail.
+## 🚀 Live Demo
 
-See `docs/ARCHITECTURE.md` for the pipeline design and `docs/DEMO_SCRIPT.md`
-for a walkthrough script.
+**Try the project here:**  
+👉 **https://airevenue-recovery-project1.vercel.app/**
 
-## Stack (100% free tier)
+No setup required. Simply:
 
-- **LLM**: [Groq](https://console.groq.com) — free API, Llama 3.3 70B
-- **Backend**: FastAPI + SQLite
-- **Frontend**: React + Vite + Tailwind
-- **Email**: [Resend](https://resend.com) — free tier, 100 emails/day (or run fully simulated/logged)
-- **Deploy**: Render or Railway (backend, free tier) + Vercel (frontend, free tier)
+1. Click **Seed Batch Data**
+2. Click **Run Recovery Batch**
+3. Watch the AI agent detect revenue at risk, diagnose the cause, decide the best intervention, and execute recovery actions.
 
-## Local setup (VS Code)
+---
 
-### 1. Backend
+## Overview
+
+Businesses lose revenue every day because of:
+
+- Failed payments
+- Abandoned carts
+- Failed subscription renewals
+- Overdue invoices
+
+This project demonstrates an **AI-powered Revenue Recovery Agent** that automatically:
+
+- Detects revenue at risk
+- Diagnoses why the payment failed using an LLM
+- Chooses the best recovery strategy
+- Enforces compliance and stopping rules
+- Sends recovery emails
+- Records every action in an audit trail
+
+The dashboard visualizes recovery metrics, root causes, and the complete decision history.
+
+---
+
+## Features
+
+### 🤖 AI Diagnosis
+Uses **Groq (Llama 3.3 70B)** to determine the most likely reason behind each revenue loss.
+
+Examples:
+
+- Card expired
+- Insufficient funds
+- Customer abandoned checkout
+- Invoice overlooked
+- Price hesitation
+
+---
+
+### 🧠 Intelligent Decision Engine
+
+Based on the diagnosis, the agent decides whether to:
+
+- Retry payment
+- Send reminder email
+- Send SMS reminder
+- Offer discount
+- Offer grace period
+- Escalate to a human
+- Stop recovery
+
+---
+
+### ✅ Compliance & Safety
+
+Before taking any action, the system checks:
+
+- Do Not Contact customers
+- Customer opt-outs
+- Active payment disputes
+- Maximum contact attempts
+- Maximum recovery window
+- Quiet hours (disabled only in demo mode)
+
+---
+
+### 📧 Real Email Integration
+
+Supports real email delivery using **Resend**.
+
+For demo purposes, recovery emails are delivered directly to the configured test inbox.
+
+---
+
+### 📊 Dashboard
+
+The React dashboard displays:
+
+- Total revenue at risk
+- Total recovered amount
+- Recovery rate
+- Root cause analysis
+- Recovery audit trail
+- Event history
+
+---
+
+## Architecture
+
+```
+Detect At-Risk Events
+          │
+          ▼
+Diagnose Root Cause (LLM)
+          │
+          ▼
+Decision Engine
+          │
+          ▼
+Compliance Checks
+          │
+          ▼
+Stopping Rules
+          │
+          ▼
+Execute Recovery
+          │
+     ┌────┴────┐
+     │         │
+ Email      Payment Retry
+     │
+     ▼
+Update Database
+     │
+     ▼
+Dashboard & Audit Logs
+```
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| Frontend | React + Vite + Tailwind CSS |
+| Backend | FastAPI |
+| Database | SQLite |
+| AI Model | Groq (Llama 3.3 70B) |
+| Email | Resend |
+| Deployment | Vercel + Render |
+
+---
+
+## Run Locally
+
+### Backend
 
 ```bash
 cd backend
+
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+source .venv/bin/activate
+
 pip install -r requirements.txt
+
 cp .env.example .env
-# Edit .env: add your free GROQ_API_KEY from https://console.groq.com
-# (Resend key optional — leave SEND_REAL_EMAILS=false to run fully simulated)
-uvicorn app.main:app --reload --port 8000
+
+uvicorn app.main:app --reload
 ```
 
-Backend runs at `http://localhost:8000`. Interactive API docs at
-`http://localhost:8000/docs`.
+Backend runs at:
 
-### 2. Frontend
+```
+http://localhost:8000
+```
+
+---
+
+### Frontend
 
 ```bash
 cd frontend
+
 npm install
+
 cp .env.example .env
+
 npm run dev
 ```
 
-Frontend runs at `http://localhost:5173`.
+Frontend runs at:
 
-### 3. Try it
-
-1. Open `http://localhost:5173`
-2. Click **Seed Batch Data** — generates ~120 synthetic at-risk events
-3. Click **Run Recovery Batch** — runs the full detect → diagnose → decide →
-   act pipeline and shows measured $ recovered, by root cause, plus the audit
-   trail
-
-Or drive it directly:
-
-```bash
-curl -X POST "http://localhost:8000/api/seed?n_customers=40&n_events=120"
-curl -X POST "http://localhost:8000/api/run-batch"
-curl "http://localhost:8000/api/metrics"
+```
+http://localhost:5173
 ```
 
-## Testing real email sends
+---
 
-Resend has two sandbox restrictions until you verify a domain at resend.com/domains:
-- You can only send **from** `onboarding@resend.dev` (not a custom or Gmail address).
-- You can only send **to** the email address you signed up to Resend with.
+## Environment Variables
 
-Since our seed data generates fake customer emails, set `TEST_RECIPIENT_EMAIL` in
-`backend/.env` to your real Resend signup address — every real send gets redirected
-there (with the original fake customer address noted in the subject line), so you
-can actually watch an email land in your inbox without changing any recovery logic.
-Leave it blank once you verify your own domain in production.
+### Backend
 
-## Getting free API keys
+```
+GROQ_API_KEY=your_key
+RESEND_API_KEY=your_key
+SEND_REAL_EMAILS=true
+TEST_RECIPIENT_EMAIL=your_email@example.com
+```
 
-- **Groq** (LLM, required for real diagnosis — falls back to rule-based
-  classification if unset): https://console.groq.com → API Keys → Create.
-- **Resend** (real email sending, optional — simulated/logged by default):
-  https://resend.com → sign up free, no card required → API Keys.
+### Frontend
 
-## Deployment (free tier)
+```
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-### Backend → Render
-1. Push this repo to GitHub.
-2. On [Render](https://render.com), New → Blueprint → point at the repo
-   (`backend/render.yaml` is already set up).
-3. Add `GROQ_API_KEY` (and `RESEND_API_KEY` if using real email) as secret
-   env vars in the Render dashboard.
-4. Deploy. Note the public URL, e.g. `https://ai-revenue-recovery-backend.onrender.com`.
+---
 
-*(Railway works the same way — New Project → Deploy from GitHub, uses the
-same `Dockerfile`.)*
+## Demo Workflow
 
-### Frontend → Vercel
-1. On [Vercel](https://vercel.com), New Project → import the repo, set root
-   directory to `frontend`.
-2. Add env var `VITE_API_BASE_URL` = your Render backend URL.
-3. Deploy.
+1. Seed synthetic revenue events
+2. Detect at-risk revenue
+3. Diagnose root cause using AI
+4. Decide the best recovery strategy
+5. Execute recovery actions
+6. Send recovery emails
+7. Update dashboard metrics
+8. Record every decision in the audit log
 
-## Project structure
+---
+
+## Project Structure
 
 ```
 ai-revenue-recovery/
-├── backend/            FastAPI app: agent pipeline, rules, API, DB
-├── frontend/            React dashboard: ledger, event table, audit trail
-├── docs/                 Architecture + demo script
-├── docker-compose.yml   Local dev: run both services together
+│
+├── backend/        FastAPI backend
+├── frontend/       React dashboard
+├── docs/           Architecture & demo guide
 └── README.md
 ```
 
-## What's simulated vs. real in this scaffold
+---
 
-| Part | Status |
-|---|---|
-| Root-cause diagnosis | Real LLM call (Groq), with rule-based fallback |
-| Compliance & stopping rules | Real, enforced logic |
-| Email sending | Real (Resend) if `SEND_REAL_EMAILS=true`, otherwise logged |
-| SMS sending | Simulated/logged (swap in Twilio/MSG91 for production) |
-| Payment retry | Simulated success probability (swap in real gateway call) |
-| Audit trail | Real, persisted, append-only |
-| Data | Synthetic (Faker) — swap `seed_data.py` for a real webhook ingester |
+## Current Implementation
+
+| Feature | Status |
+|---------|--------|
+| AI Root Cause Diagnosis | ✅ |
+| Decision Engine | ✅ |
+| Compliance Rules | ✅ |
+| Stopping Rules | ✅ |
+| Recovery Emails | ✅ |
+| Dashboard | ✅ |
+| Audit Trail | ✅ |
+| Synthetic Data Generator | ✅ |
+| Deployment | ✅ |
+
+---
+
+## Future Improvements
+
+- Twilio SMS integration
+- Stripe payment retries
+- PostgreSQL support
+- Multi-tenant architecture
+- Live webhook ingestion
+- Analytics dashboard
