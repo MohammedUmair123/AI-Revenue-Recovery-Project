@@ -38,7 +38,7 @@ The dashboard visualizes recovery metrics, root causes, and the complete decisio
 ## Features
 
 ### 🤖 AI Diagnosis
-Uses **Groq (Llama 3.3 70B)** to determine the most likely reason behind each revenue loss.
+Uses **Groq (OpenAI GPT-OSS-120B)** to determine the most likely reason behind each revenue loss.
 
 Examples:
 
